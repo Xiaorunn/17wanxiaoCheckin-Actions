@@ -37,6 +37,13 @@ def get_post_json(token):
         if res['code'] != '10000':
             return None
         data = json.loads(res['data'])
+        for i in data['cusTemplateRelations']:
+            if i["propertyname"] != 'wengdu':
+                updateinfo.append(
+                    {"propertyname": i["propertyname"], "value": i["value"]})
+            else:
+                updateinfo.append(
+                    {"propertyname": i["propertyname"], "value": "0"})
         post_dict = {
             "areaStr": data['areaStr'],
             "deptStr": data['deptStr'],
@@ -47,8 +54,7 @@ def get_post_json(token):
             "stuNo": data['stuNo'],
             "phonenum": data['phonenum'],
             "templateid": data['templateid'],
-            "updatainfo": [{"propertyname": i["propertyname"], "value": i["value"]} for i in
-                           data['cusTemplateRelations']],
+            "updatainfo": updateinfo,
             "checkbox": [{"description": i["decription"], "value": i["value"]} for i in
                          data['cusTemplateRelations']],
         }
