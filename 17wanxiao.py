@@ -37,6 +37,7 @@ def get_post_json(token):
         if res['code'] != '10000':
             return None
         data = json.loads(res['data'])
+        updateinfo = []
         for i in data['cusTemplateRelations']:
             if i["propertyname"] != 'wengdu':
                 updateinfo.append(
