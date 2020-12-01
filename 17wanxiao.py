@@ -27,8 +27,10 @@ def get_post_json(token):
                  "method": "userComeApp"}
         try:
             # 如果不请求一下这个地址，token就会失效
-            requests.post("https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo", data={'token': token})
-            res = requests.post(url="https://reportedh5.17wanxiao.com/sass/api/epmpics", json=jsons, timeout=10).json()
+            requests.post(
+                "https://reportedh5.17wanxiao.com/api/clock/school/getUserInfo", data={'token': token})
+            res = requests.post(
+                url="https://reportedh5.17wanxiao.com/sass/api/epmpics", json=jsons, timeout=10).json()
         except:
             retry += 1
             logging.warning('获取完美校园打卡post参数失败，正在重试...')
@@ -87,14 +89,16 @@ def check_in(username, password):
                                "gpsType": 1, "token": token},
                   }
     try:
-        response = requests.post("https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json)
+        response = requests.post(
+            "https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json)
     except:
         errmsg = f"```{username}，打卡请求出错```"
         logging.warning(errmsg)
         return dict(status=0, errmsg=errmsg)
 
     # 以json格式打印json字符串
-    res = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    res = json.dumps(response.json(), sort_keys=True,
+                     indent=4, ensure_ascii=False)
     if response.json()['code'] != '10000':
         logging.warning(res)
         return dict(status=1, res=res, post_dict=post_dict, check_json=check_json)
@@ -126,7 +130,8 @@ def run():
     initLogging()
     now_time = datetime.datetime.now()
     bj_time = now_time + datetime.timedelta(hours=8)
-    test_day = datetime.datetime.strptime('2020-12-26 00:00:00', '%Y-%m-%d %H:%M:%S')
+    test_day = datetime.datetime.strptime(
+        '2021-6-15 00:00:00', '%Y-%m-%d %H:%M:%S')
     date = (test_day - bj_time).days
     log_info = [f"""
 ------
@@ -143,7 +148,8 @@ def run():
         if not chech_dict['status']:
             log_info.append(chech_dict['errmsg'])
         else:
-            post_msg = "\n".join([f"| {i['description']} | {i['value']} |" for i in chech_dict['post_dict']['checkbox']])
+            post_msg = "\n".join(
+                [f"| {i['description']} | {i['value']} |" for i in chech_dict['post_dict']['checkbox']])
             log_info.append(f"""#### {chech_dict['post_dict']['username']}打卡json字段：
 ```
 {json.dumps(chech_dict['check_json'], sort_keys=True, indent=4, ensure_ascii=False)}
@@ -158,15 +164,12 @@ def run():
 {chech_dict['res']}
 ```
             """)
-    log_info.append(f"""### ⚡考研倒计时:
+    log_info.append(f"""### ⚡四级倒计时:
 ```
 {date}天
 ```
+抓紧起床背单词！！！！
 
->
-> [GitHub项目地址](https://github.com/ReaJason/17wanxiaoCheckin-Actions)
->
->期待你给项目的star✨
 """)
     server_push(sckey, "\n".join(log_info))
 
